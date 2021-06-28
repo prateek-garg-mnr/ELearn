@@ -1,13 +1,27 @@
 import React, { useState } from "react";
-
+import axios from "axios";
+import { toast } from "react-toastify";
+import { SyncOutlined } from "@ant-design/icons";
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.table({ email, password, name });
+    setLoading(true);
+    try {
+      const { data } = await axios.post("http://localhost:8000/api/register", {
+        name,
+        email,
+        password,
+      });
+      toast("Registration Successful!! Please Login :)");
+    } catch (e) {
+      toast.error(e.response.data.message);
+    }
+    setLoading(false);
   };
 
   return (
@@ -36,7 +50,9 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter name"
           />
-          <button className="btn btn-block p-2 btn-primary" type="submit">Submit</button>
+          <button className="btn btn-block p-2 btn-primary" type="submit" disabled={!name || !email || !password || loading}>
+            {loading ? <SyncOutlined/> : "Submit"}
+          </button>
         </form>
       </div>
     </>
