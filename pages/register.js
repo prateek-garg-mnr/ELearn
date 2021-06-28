@@ -12,11 +12,14 @@ function Register() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axios.post("http://localhost:8000/api/register", {
-        name,
-        email,
-        password,
-      });
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API}/register`,
+        {
+          name,
+          email,
+          password,
+        }
+      );
       toast("Registration Successful!! Please Login :)");
     } catch (e) {
       toast.error(e.response.data.message);
@@ -50,8 +53,12 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter name"
           />
-          <button className="btn btn-block p-2 btn-primary" type="submit" disabled={!name || !email || !password || loading}>
-            {loading ? <SyncOutlined/> : "Submit"}
+          <button
+            className="btn btn-block p-2 btn-primary"
+            type="submit"
+            disabled={!name || !email || !password || loading}
+          >
+            {loading ? <SyncOutlined /> : "Submit"}
           </button>
         </form>
       </div>
